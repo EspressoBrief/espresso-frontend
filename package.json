@@ -14,8 +14,13 @@
     "@nuxt/image": "^1.8.0",
     "@nuxt/ui": "^2.18.6",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@vueuse/nuxt": "^11.1.0",
     "nuxt": "^3.13.0",
+    "nuxt-vuefire": "^1.0.4",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@vue-macros/reactivity-transform": "^1.1.1"
   }
 }
