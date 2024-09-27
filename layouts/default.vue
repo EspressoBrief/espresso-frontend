@@ -17,6 +17,10 @@ const links = [{
   label: 'Home',
   icon: 'i-heroicons-home',
   to: '/'
+}, {
+  label: 'Context',
+  icon: 'i-mdi:robot',
+  to: '/context'
 }]
 
 const clear_data = () => {

@@ -1,0 +1,36 @@
+<template>
+  <div>
+    <Heading>Give your agent a bit of context</Heading>
+    <div v-if="questions.length > 0" class="flex flex-col">
+      <p class="text-2xl font-bold pb-4">{{ questions[0] }}</p>
+      <UForm ref="form" :state="state" @submit="onSubmit" class="space-y-4">
+        <UFormGroup>
+          <UInput v-model="state.answer" />
+        </UFormGroup>
+        <UButton type="submit">
+          Submit
+        </UButton>
+      </UForm>
+    </div>
+    <div v-else>
+      <p class="text-2xl font-bold pb-4">You're all caught up!</p>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+let state = reactive({
+  answer: undefined
+})
+
+const form = ref()
+
+let questions = $ref(["Do you mind getting a bit wet in the rain?", "How much time do you need for getting up?"])
+const onSubmit = (event: any) => {
+  questions = questions.filter(q => q != questions[0])
+  console.log(event.data.answer)
+  state = {
+    answer: undefined
+  }
+}
+</script>
