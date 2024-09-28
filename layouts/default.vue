@@ -3,7 +3,7 @@
     <div class="flex justify-between px-8">
       <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800" />
       <div class="py-4 min-w-max">
-        <UButton @click="clear_data()">Clear Data</UButton>
+        <UButton @click="clear_data()">Clear Local Storage</UButton>
       </div>
     </div>
     <div class="flex flex-col items-center w-full p-8">

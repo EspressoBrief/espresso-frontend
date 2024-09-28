@@ -2,25 +2,39 @@
   <div>
     <Heading>Your Daily Briefing</Heading>
     <div v-if="data.events != undefined && data.events != null"
-      class="grid grid-flow-row-dense auto-cols-max grid-cols-1 lg:grid-cols-3 gap-8">
-      <UCard>
-        <div class="flex">
-          <IconText icon="i-mdi:alarm">{{ wake_up_time }}</IconText>
-          <IconText icon="i-mdi:clock-alert-outline">{{ useDateFormat(data.events[0].commute.start, "HH:mm") }}
-          </IconText>
+      class="grid grid-flow-row-dense auto-cols-max grid-cols-1 lg:grid-cols-4 gap-4">
+      <UCard class="col-span-2 flex flex-col justify-center">
+        <div class="flex justify-between items-center">
+          <div></div>
+          <div class="flex items-center">
+            <Icon name="i-mdi:alarm" size="48px" class="mr-4" />
+            <span class="font-bold text-2xl">{{ data.wake_up_time }}</span>
+          </div>
+          <div class="flex items-center">
+            <Icon name="i-mdi:walk" size="48px" class="mr-4" />
+            <span class="font-bold text-2xl">{{
+              useDateFormat(data?.events[0].commute[0].start, "HH:mm")
+            }}</span>
+          </div>
+          <div></div>
         </div>
       </UCard>
       <UCard class="col-span-1 lg:col-span-2">
         <p class="max-w-prose">{{ data.general_info }}</p>
       </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <UAlert v-for="headline in data.headlines" :key="headline.title" :title="headline.title" />
+      <UCard class="lg:col-span-2">
+        <div class="flex flex-col items-center">
+          <Icon name="i-mdi:newspaper-variant-multiple-outline" size="36px" class="mb-2" />
+          <NuxtLink v-for="headline in data.headlines" :href="headline.link" class="w-full hover:text-">
+            <UAlert :key="headline.title" :description="headline.snippet" :title="headline.title" class="my-2" />
+          </NuxtLink>
         </div>
       </UCard>
       <UCard class="col-span-1 lg:col-span-2">
-        <div class="flex flex-col">
-          <UAlert v-for="todo in data.todos" :description="todo.comment" :title="todo.title" :key="todo.title" />
+        <div class="flex flex-col items-center">
+          <Icon name="i-mdi:checkbox-marked-circle-outline" size="48px" class="mb-2" />
+          <UAlert v-for="todo in data.todos" :description="todo.comment" :title="todo.title" :key="todo.title"
+            class="my-2" />
         </div>
       </UCard>
       <UCard v-for="event in data.events" class="col-span-full">
@@ -62,7 +76,7 @@
 <script setup lang="ts">
 import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore/lite";
 
-const briefing_id = "h7dDAQfJDG5oTb3DtTrD"
+const briefing_id = "briefing1"
 
 const get_total_commute_time = (event: any) => {
   let time = 0
@@ -72,8 +86,6 @@ const get_total_commute_time = (event: any) => {
 }
 
 const color_labels = ["red", "yellow", "green", "blue", "gray"]
-
-const wake_up_time = "6:00"
 
 const { data } = await useAsyncData(async () => {
   console.log("test")
@@ -98,7 +110,9 @@ const { data } = await useAsyncData(async () => {
       })
     }
   })
-  return { events: events, general_info: briefing.data().info, todos: briefing.data().relevant_todos, headlines: briefing.data().headlines }
+  const out = { events: events, general_info: briefing.data().info, todos: briefing.data().relevant_todos, headlines: briefing.data().headlines, wake_up_time: briefing.data().time_to_stand_up }
+  console.log(out)
+  return out
 })
 
 </script>
