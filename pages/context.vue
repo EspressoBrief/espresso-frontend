@@ -7,9 +7,12 @@
         <UFormGroup>
           <UInput v-model="state.answer" />
         </UFormGroup>
-        <UButton type="submit">
-          Submit
-        </UButton>
+        <div class="flex space-x-4">
+          <UButton color="red" @click="skipQuestion()">Don't answer</UButton>
+          <UButton type="submit">
+            Submit
+          </UButton>
+        </div>
       </UForm>
     </div>
     <div v-else>
@@ -31,5 +34,12 @@ const onSubmit = (event: any) => {
   state = {
     answer: undefined
   }
+}
+
+const skipQuestion = () => {
+  state = {
+    answer: undefined
+  }
+  questions = questions.filter(q => q != questions[0])
 }
 </script>

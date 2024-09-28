@@ -11,7 +11,7 @@
         </div>
       </UCard>
       <UCard class="col-span-1 lg:col-span-2">
-        <p class="max-w-prose">{{ general_ai_text }}</p>
+        <p class="max-w-prose">{{ general_info }}</p>
       </UCard>
       <UCard v-for="event in events" class="col-span-full">
         <template #header>
@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore/lite";
 
-const briefing_string = "3KtnLKu4JqedzAeIO4E1"
+const briefing_id = "mjXRVhGSi6jMbkbCDgw4"
 
 const get_total_commute_time = (event: any) => {
   let time = 0
@@ -60,18 +60,19 @@ const get_total_commute_time = (event: any) => {
 
 const color_labels = ["red", "yellow", "green", "blue", "gray"]
 
-const general_ai_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam facilisis bibendum fringilla. Phasellus at metus sed nisi facilisis volutpat sit amet non massa. In hac habitasse platea dictumst. Pellentesque eu porta orci. Ut cursus dictum enim. Fusce id tortor ut neque pulvinar scelerisque. Maecenas ante justo, laoreet et urna in, lacinia sagittis sapien. Etiam dignissim urna arcu, non aliquet arcu sodales ut. Integer et lorem erat. Donec interdum lectus nec urna varius pulvinar. Duis viverra nisi commodo imperdiet scelerisque. Sed vel euismod massa. Nam rhoncus magna ut porttitor pharetra. Pellentesque ultricies diam vitae fermentum lobortis. "
-
 const wake_up_time = "6:00"
+
+let general_info = $ref("")
 
 const { data: events } = await useAsyncData(async () => {
   console.log("test")
   const db = getFirestore(useFirebaseApp())
-  const docRef = doc(db, "users", "user1", "briefings", briefing_string)
-  const user = await getDoc(docRef)
-  console.log(user.data())
-  console.log(user.exists())
-  const data = user.data().events.map((event: any) => {
+  const docRef = doc(db, "users", "user1", "briefings", briefing_id)
+  const briefing = await getDoc(docRef)
+  console.log(briefing.data())
+  console.log(briefing.exists())
+  general_info = briefing.data().info
+  const data = briefing.data().events.map((event: any) => {
     return {
       title: event.calendar.name,
       ai_suggestion: event.info,
