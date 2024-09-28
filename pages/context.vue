@@ -1,8 +1,9 @@
 <template>
   <div>
     <Heading>Tell your AI agent a bit about yourself</Heading>
-    <div v-if="questions.length > 0" class="flex flex-col">
-      <p class="text-2xl font-bold pb-4">{{ questions[0] }}</p>
+    <div v-if="questions[0]" class="flex flex-col">
+      <p class="text-2xl font-bold pb-4">{{ questions[0].question }}</p>
+      <p class="pb-4">{{ questions[0].description }}</p>
       <UForm ref="form" :state="state" @submit="onSubmit" class="space-y-4">
         <UFormGroup>
           <UInput v-model="state.answer" />
@@ -22,24 +23,45 @@
 </template>
 
 <script lang="ts" setup>
+import { getFirestore, doc, getDoc, collection, getDocs, deleteDoc, addDoc } from "firebase/firestore/lite";
+
 let state = reactive({
   answer: undefined
 })
 
 const form = ref()
 
-let questions = $ref(["Do you mind getting a bit wet in the rain?", "How much time do you need for getting up?"])
-const onSubmit = (event: any) => {
-  questions = questions.filter(q => q != questions[0])
+const db = getFirestore(useFirebaseApp())
+
+let questionsRef = await getDocs(collection(db, "users", "user1", "context_requests"))
+
+let { data: questions, refresh } = $(await useAsyncData(async () => {
+  let questions: { description: String, question: String, id: String }[] = []
+  questionsRef.forEach((doc) => {
+    questions.push({ description: doc.data().description, question: doc.data().question, id: doc.id })
+  })
+  console.log("loading questions", questions)
+  return questions
+}))
+
+const onSubmit = async (event: any) => {
+  await addDoc(collection(db, "users", "user1", "context"), { question: questions[0].question, answer: state.answer })
+  await deleteDoc(doc(db, "users/" + "user1/" + "context_requests/" + questions[0].id))
   state = {
     answer: undefined
   }
+  console.log("submitted")
+  // refresh()
+  window.location.reload();
 }
 
-const skipQuestion = () => {
+const skipQuestion = async () => {
   state = {
     answer: undefined
   }
-  questions = questions.filter(q => q != questions[0])
+  await deleteDoc(doc(db, "users/" + "user1/" + "context_requests/" + questions[0].id))
+  console.log("skipped")
+  // refresh()
+  window.location.reload();
 }
 </script>
