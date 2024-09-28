@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Heading>Give your agent a bit of context</Heading>
+    <Heading>Tell your AI agent a bit about yourself</Heading>
     <div v-if="questions.length > 0" class="flex flex-col">
       <p class="text-2xl font-bold pb-4">{{ questions[0] }}</p>
       <UForm ref="form" :state="state" @submit="onSubmit" class="space-y-4">
@@ -28,7 +28,6 @@ const form = ref()
 let questions = $ref(["Do you mind getting a bit wet in the rain?", "How much time do you need for getting up?"])
 const onSubmit = (event: any) => {
   questions = questions.filter(q => q != questions[0])
-  console.log(event.data.answer)
   state = {
     answer: undefined
   }

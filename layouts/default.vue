@@ -2,7 +2,7 @@
   <div>
     <div class="flex justify-between px-8">
       <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800" />
-      <div class="p-2 min-w-max">
+      <div class="py-4 min-w-max">
         <UButton @click="clear_data()">Clear Data</UButton>
       </div>
     </div>
